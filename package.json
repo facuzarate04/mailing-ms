@@ -1,0 +1,32 @@
+{
+  "name": "notification-ms",
+  "version": "1.0.0",
+  "description": "Notifications microservice used in ecommerce project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "dev": "tsc && nodemon ./dist/server.js"
+  },
+  "keywords": [],
+  "author": "Facundo Zarate",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "helmet": "^6.0.0",
+    "module-alias": "^2.2.2",
+    "mongoose": "^6.6.1",
+    "nodemailer": "^6.7.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.14",
+    "@types/nodemailer": "^6.4.6",
+    "nodemon": "^2.0.20"
+  },
+  "_moduleAliases": {
+    "@": "dist/"
+  }
+}
