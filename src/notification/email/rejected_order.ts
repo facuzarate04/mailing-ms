@@ -1,11 +1,18 @@
-export interface RejectedOrderTemplate {
+interface IRejectedOrder {
     name: string;
     reason: string;
     subject: string;
     message: string;
 }
 
-export const RejectedOrderType = 'rejected_order';
+export interface IRejectedOrderRequest {
+    name: string;
+    reason: string;
+    from: string;
+    to: string;
+}
+
+const RejectedOrderType = 'rejected_order';
 
 const subject = () : string => {
     return 'Order Rejected';
@@ -19,11 +26,17 @@ const message = (name: string, reason: string) : string => {
     <p>Regards</p>`;
 }
 
-export const template = (name: string, reason: string) : RejectedOrderTemplate => {
+const RejectedOrder = (name: string, reason: string) : IRejectedOrder => {
     return {
         name: name,
         reason: reason,
         subject: subject(),
         message: message(name, reason)
     }
+}
+
+export {
+    RejectedOrderType,
+    RejectedOrder,
+    IRejectedOrder
 }

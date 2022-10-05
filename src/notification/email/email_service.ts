@@ -1,87 +1,35 @@
-import * as emailModel from '@/notification/email/email'
-import * as created_order from '@/notification/email/created_order'
-import * as rejected_order from '@/notification/email/rejected_order'
+import * as email from '@/notification/email/email'
+import { CreatedOrder, ICreatedOrderRequest } from '@/notification/email/created_order'
+import { IRejectedOrderRequest, RejectedOrder } from '@/notification/email/rejected_order'
 
+export const sendCreatedOrderEmail = async (body: ICreatedOrderRequest) => {
+    
+    const createdOrder = CreatedOrder(body.name, body.order_number);
 
-
-interface SendCreatedOrderInterface {
-    name: string;
-    order_number: string;
-    from: string;
-    to: string;
-}
-
-export const sendCreatedOrderEmail = (data: SendCreatedOrderInterface) => {
-    const { name, order_number, from, to } = data;
-    const email = new emailModel.Email({
-        type: created_order.CreatedOrderType,
-        from: from,
-        to: to,
-        status: emailModel.pendingStatus
-    });
-
-    /* Send Email */
-    const transporter = emailModel.init();
-    const template = emailModel.createdOrderTemplate(name, order_number);
-    const mailOptions = {
-        from: email.from,
-        to: email.to,
-        subject: template.subject,
-        html: template.message
+    const emailData = {
+        from: body.from,
+        to: body.to,
+        subject: createdOrder.subject,
+        html: createdOrder.message
     };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            email.save();
-            throw error;
-        }
-        email.status = emailModel.deliveredStatus;
-        email.save();
-        return info;
-    });
-
+        
+    await email.send(emailData);
 }
 
 
-interface SendRejectedOrderInterface {
-    name: string;
-    reason: string;
-    from: string;
-    to: string;
-}
-export const sendRejectedOrderEmail = (data: SendRejectedOrderInterface) => {
-    const { name, reason, from, to } = data;
+export const sendRejectedOrderEmail = async (body: IRejectedOrderRequest) => {
 
-    const email = new emailModel.Email({
-        type: rejected_order.RejectedOrderType,
-        from: from,
-        to: to,
-        status: emailModel.pendingStatus
-    });
+    const rejectedOrder = RejectedOrder(body.name, body.reason);
 
-    /* Send Email */
-    const transporter = emailModel.init();
-    const template = emailModel.rejectedOrderTemplate(name, reason);
-
-    const mailOptions = {
-        from: from,
-        to: to,
-        subject: template.subject,
-        html: template.message
+    const emailData = {
+        from: body.from,
+        to: body.to,
+        subject: rejectedOrder.subject,
+        html: rejectedOrder.message
     };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            email.save();
-            throw error;
-        }
-        email.status = emailModel.deliveredStatus;
-        email.save();
-        return info;
-    });
-};
-
-
+        
+    await email.send(emailData);
+}
 
 
 

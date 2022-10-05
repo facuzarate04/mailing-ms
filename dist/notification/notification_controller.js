@@ -34,45 +34,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendRejectedOrderNotification = exports.sendCreatedOrderNotification = void 0;
 const email_service = __importStar(require("@/notification/email/email_service"));
+const validation_1 = require("./email/validation");
 const sendCreatedOrderNotification = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const channels = req.body.channels;
     if (channels.includes('email')) {
-        let data = {
-            name: req.body.name,
-            order_number: req.body.order_number,
-            from: req.body.from,
-            to: req.body.to
-        };
         try {
-            const response = yield email_service.sendCreatedOrderEmail(data);
+            const body = yield (0, validation_1.validateSendCreatedOrder)(req.body);
+            const response = yield email_service.sendCreatedOrderEmail(body);
             return res.status(200).json({ message: 'Email sent' });
         }
         catch (error) {
             return res.status(500).json({ message: 'Error sending email' });
         }
     }
-    if (channels.includes('web')) {
+    if (channels.includes('database')) {
     }
 });
 exports.sendCreatedOrderNotification = sendCreatedOrderNotification;
 const sendRejectedOrderNotification = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const channels = req.body.channels;
     if (channels.includes('email')) {
-        let data = {
-            name: req.body.name,
-            reason: req.body.reason,
-            from: req.body.from,
-            to: req.body.to
-        };
         try {
-            const response = yield email_service.sendRejectedOrderEmail(data);
+            const body = yield (0, validation_1.validateSendRejectedOrder)(req.body);
+            const response = yield email_service.sendRejectedOrderEmail(body);
             return res.status(200).json({ message: 'Email sent' });
         }
         catch (error) {
             return res.status(500).json({ message: 'Error sending email' });
         }
     }
-    if (channels.includes('web')) {
+    if (channels.includes('database')) {
     }
 });
 exports.sendRejectedOrderNotification = sendRejectedOrderNotification;

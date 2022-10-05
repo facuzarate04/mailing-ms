@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-export interface DatabaseInterface {
+export interface IDatabase {
     webhook: string;
     message: string;
     origin_id: string;
@@ -22,4 +22,4 @@ const DatabaseSchema = new Schema({
     updated_at: { type: Date, default: Date.now },
 });
 
-export const Database = model<DatabaseInterface>('Web', DatabaseSchema);
+export const Database = model<IDatabase>('Web', DatabaseSchema);

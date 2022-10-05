@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.template = exports.RejectedOrderType = void 0;
-exports.RejectedOrderType = 'rejected_order';
+exports.RejectedOrder = exports.RejectedOrderType = void 0;
+const RejectedOrderType = 'rejected_order';
+exports.RejectedOrderType = RejectedOrderType;
 const subject = () => {
     return 'Order Rejected';
 };
@@ -12,7 +13,7 @@ const message = (name, reason) => {
     <p>Thank you for shopping with us.</p>
     <p>Regards</p>`;
 };
-const template = (name, reason) => {
+const RejectedOrder = (name, reason) => {
     return {
         name: name,
         reason: reason,
@@ -20,4 +21,4 @@ const template = (name, reason) => {
         message: message(name, reason)
     };
 };
-exports.template = template;
+exports.RejectedOrder = RejectedOrder;

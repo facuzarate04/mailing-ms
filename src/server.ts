@@ -7,6 +7,7 @@ import router from '@/server/routes';
 import helmet from 'helmet';
 import cors from 'cors';
 
+
 const app = express();
 
 app.use(helmet());
@@ -17,15 +18,16 @@ app.use(bodyParser.json());
 
 app.use('/api/v1', router);
 
-/* Mongoose connect */
-mongoose.connect(config.db, {}, (err) => {
+/* Mongoose connection */
+mongoose.connect(config.db_mongo_uri, {}, (err) => {
     if (err) {
         console.log(err)
     }
     else {
-        console.log(`Connected to database: ${config.db}`);
+        console.log(`Connected to database: ${config.db_mongo_uri}`);
     }
 });
+
 
 
 /* Start server */

@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.template = exports.CreatedOrderType = void 0;
-exports.CreatedOrderType = 'created_order';
+exports.CreatedOrder = exports.CreatedOrderType = void 0;
+const CreatedOrderType = 'created_order';
+exports.CreatedOrderType = CreatedOrderType;
 const subject = () => {
     return 'Order Created';
 };
@@ -12,7 +13,7 @@ const message = (name, order_number) => {
     <p>Thank you for shopping with us.</p>
     <p>Regards</p>`;
 };
-const template = (name, order_number) => {
+const CreatedOrder = (name, order_number) => {
     return {
         name: name,
         order_number: order_number,
@@ -20,4 +21,4 @@ const template = (name, order_number) => {
         message: message(name, order_number)
     };
 };
-exports.template = template;
+exports.CreatedOrder = CreatedOrder;

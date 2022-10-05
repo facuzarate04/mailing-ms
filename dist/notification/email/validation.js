@@ -1,18 +1,47 @@
 "use strict";
-/* Validate */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringField = exports.requiredField = void 0;
-function requiredField(field) {
-    if (!field) {
-        return { path: field, message: `${field} can not be empty` };
+exports.validateSendRejectedOrder = exports.validateSendCreatedOrder = void 0;
+function validateSendCreatedOrder(body) {
+    const result = {
+        messages: []
+    };
+    if (!body.name) {
+        result.messages.push({ field: 'name', message: 'Name is required' });
     }
-    return;
-}
-exports.requiredField = requiredField;
-function stringField(field) {
-    if (typeof field !== 'string') {
-        return { path: field, message: `${field} should be an string` };
+    if (!body.order_number) {
+        result.messages.push({ field: 'order_number', message: 'Order number is required' });
     }
-    return;
+    if (!body.from) {
+        result.messages.push({ field: 'from', message: 'From is required' });
+    }
+    if (!body.to) {
+        result.messages.push({ field: 'to', message: 'To is required' });
+    }
+    if (result.messages.length > 0) {
+        return Promise.reject(result);
+    }
+    return Promise.resolve(body);
 }
-exports.stringField = stringField;
+exports.validateSendCreatedOrder = validateSendCreatedOrder;
+function validateSendRejectedOrder(body) {
+    const result = {
+        messages: []
+    };
+    if (!body.name) {
+        result.messages.push({ field: 'name', message: 'Name is required' });
+    }
+    if (!body.reason) {
+        result.messages.push({ field: 'reason', message: 'Reason number is required' });
+    }
+    if (!body.from) {
+        result.messages.push({ field: 'from', message: 'From is required' });
+    }
+    if (!body.to) {
+        result.messages.push({ field: 'to', message: 'To is required' });
+    }
+    if (result.messages.length > 0) {
+        return Promise.reject(result);
+    }
+    return Promise.resolve(body);
+}
+exports.validateSendRejectedOrder = validateSendRejectedOrder;

@@ -1,12 +1,19 @@
 
-export interface CreatedOrderTemplate {
+interface ICreatedOrder {
     name: string;
     order_number: string;
     subject: string;
     message: string;
 }
 
-export const CreatedOrderType = 'created_order';
+export interface ICreatedOrderRequest {
+    name: string;
+    order_number: string;
+    from: string;
+    to: string;
+}
+
+const CreatedOrderType = 'created_order';
 
 const subject = () : string => {
     return 'Order Created';
@@ -20,13 +27,20 @@ const message = (name: string, order_number: string) : string => {
     <p>Regards</p>`;
 }
 
-export const template = (name: string, order_number: string) : CreatedOrderTemplate => {
+const CreatedOrder = (name: string, order_number: string) : ICreatedOrder => {
     return {
         name: name,
         order_number: order_number,
         subject: subject(),
         message: message(name, order_number)
     }
+}
+
+
+export {
+    CreatedOrderType,
+    CreatedOrder,
+    ICreatedOrder
 }
 
 

@@ -18,13 +18,13 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
 app.use('/api/v1', routes_1.default);
-/* Mongoose connect */
-mongoose_1.default.connect(config_1.default.db, {}, (err) => {
+/* Mongoose connection */
+mongoose_1.default.connect(config_1.default.db_mongo_uri, {}, (err) => {
     if (err) {
         console.log(err);
     }
     else {
-        console.log(`Connected to database: ${config_1.default.db}`);
+        console.log(`Connected to database: ${config_1.default.db_mongo_uri}`);
     }
 });
 /* Start server */
