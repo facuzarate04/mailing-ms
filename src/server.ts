@@ -1,11 +1,11 @@
 import 'module-alias/register';
 import express from 'express';
-import mongoose from 'mongoose';
 import config from '@/server/config';
 import bodyParser from 'body-parser';
 import router from '@/server/routes';
 import helmet from 'helmet';
 import cors from 'cors';
+import { createClient } from 'redis';
 
 
 const app = express();
@@ -18,16 +18,13 @@ app.use(bodyParser.json());
 
 app.use('/api/v1', router);
 
-/* Mongoose connection */
-mongoose.connect(config.db_mongo_uri, {}, (err) => {
-    if (err) {
-        console.log(err)
-    }
-    else {
-        console.log(`Connected to database: ${config.db_mongo_uri}`);
-    }
-});
 
+/* Redis Client connection */
+export const redisClient = createClient({ url: config.db_redis_uri });
+redisClient.connect();
+redisClient.on('ready', () => {
+    console.log(`Connected to redis: ${config.db_redis_uri}`);
+});
 
 
 /* Start server */

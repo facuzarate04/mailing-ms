@@ -1,6 +1,7 @@
 import * as express from "express";
 import { NextFunction } from "connect";
-import * as notification_controller from "@/notification/notification_controller";
+import { sendCreatedOrderEmail } from "@/email/created_order";
+import { sendRejectedOrderEmail } from "@/email/rejected_order";
 
 const router = express.Router();
 
@@ -11,19 +12,19 @@ const router = express.Router();
 
 /* Functions */
 
-const sendCreatedOrderNotification = (req: express.Request, res: express.Response) => {
-    notification_controller.sendCreatedOrderNotification(req, res);
+const createdOrder = (req: express.Request, res: express.Response) => {
+    sendCreatedOrderEmail(req, res);
 };
 
-const sendRejectedOrderNotification = (req: express.Request, res: express.Response) => {
-    notification_controller.sendRejectedOrderNotification(req, res);
+const rejectedOrder = (req: express.Request, res: express.Response) => {
+    sendRejectedOrderEmail(req, res);
 };
 
 
 /* Routes */
 
-router.post('/notify/created_order', sendCreatedOrderNotification);
-router.post('/notify/rejected_order', sendRejectedOrderNotification);
+router.post('/email/created_order', createdOrder);
+router.post('/email/rejected_order', rejectedOrder);
 
 
 export default router;

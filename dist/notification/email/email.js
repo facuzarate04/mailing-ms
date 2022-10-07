@@ -25,43 +25,35 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.send = void 0;
 const nodemailer = __importStar(require("nodemailer"));
-function init() {
-    /* const transporter = nodemailer.createTransport({
-        host: config.mail_host,
-        port: config.mail_port,
-        auth: {
-            user: config.mail_user,
-            pass: config.mail_pass
-        }
-    }); */
+function init(connection) {
     const transporter = nodemailer.createTransport({
-        host: "smtp.mailtrap.io",
-        port: 2525,
+        host: connection.host,
+        port: connection.port,
         auth: {
-            user: "0a4f9dd9b6b6a4",
-            pass: "ff360e0a187be7"
+            user: connection.auth.user,
+            pass: connection.auth.pass
         }
     });
     transporter.verify(function (error, success) {
         if (error) {
-            throw error;
+            console.log(error.message);
         }
     });
     return transporter;
 }
 function send(data) {
-    const transporter = init();
+    const transporter = init(data.connection);
     const mailOptions = {
-        from: data.from,
+        from: data.connection.from,
         to: data.to,
         subject: data.subject,
         html: data.html
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            throw error;
+            console.log(error.message);
         }
-        return info.messageId;
+        return info;
     });
 }
 exports.send = send;

@@ -23,9 +23,6 @@ export function validateSendCreatedOrder(body: ICreatedOrderRequest): Promise<IC
     if (!body.order_number) {
         result.messages.push({ field: 'order_number', message: 'Order number is required' });
     }
-    if (!body.from) {
-        result.messages.push({ field: 'from', message: 'From is required' });   
-    }
     if (!body.to) {
         result.messages.push({ field: 'to', message: 'To is required' });
     }
@@ -47,9 +44,6 @@ export function validateSendRejectedOrder(body: IRejectedOrderRequest): Promise<
     }
     if (!body.reason) {
         result.messages.push({ field: 'reason', message: 'Reason number is required' });
-    }
-    if (!body.from) {
-        result.messages.push({ field: 'from', message: 'From is required' });   
     }
     if (!body.to) {
         result.messages.push({ field: 'to', message: 'To is required' });

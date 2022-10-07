@@ -24,17 +24,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const notification_controller = __importStar(require("@/notification/notification_controller"));
+const created_order_1 = require("@/email/created_order");
+const rejected_order_1 = require("@/email/rejected_order");
 const router = express.Router();
 /* Middlewares */
 /* Functions */
-const sendCreatedOrderNotification = (req, res) => {
-    notification_controller.sendCreatedOrderNotification(req, res);
+const createdOrder = (req, res) => {
+    (0, created_order_1.sendCreatedOrderEmail)(req, res);
 };
-const sendRejectedOrderNotification = (req, res) => {
-    notification_controller.sendRejectedOrderNotification(req, res);
+const rejectedOrder = (req, res) => {
+    (0, rejected_order_1.sendRejectedOrderEmail)(req, res);
 };
 /* Routes */
-router.post('/notify/created_order', sendCreatedOrderNotification);
-router.post('/notify/rejected_order', sendRejectedOrderNotification);
+router.post('/email/created_order', createdOrder);
+router.post('/email/rejected_order', rejectedOrder);
 exports.default = router;
