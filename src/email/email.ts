@@ -49,7 +49,7 @@ export async function send(data: IEmail) : Promise<string | null> {
 }
 
 
-export async function saveEmail(data: schema.IEmailRedis) : Promise<void> {
+export async function save(data: schema.IEmailRedis) : Promise<void> {
     const key = data.key;
     const value = {
         type: data.value.type,

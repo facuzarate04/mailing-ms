@@ -25,7 +25,7 @@ export const sendRejectedOrderEmail = async (req: Request, res: Response) => {
         const response = await email.send(emailData)
 
         if(typeof response === 'string') {
-            await email.saveEmail({
+            await email.save({
                 key: response,
                 value: {
                     type: 'rejected_order',
