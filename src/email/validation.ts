@@ -18,13 +18,13 @@ export function validateSendCreatedOrder(body: ICreatedOrderRequest): Promise<IC
     };
 
     if (!body.name) {
-        result.messages.push({ field: 'name', message: 'Name is required' });
+        result.messages.push({ field: 'name', message: 'name field is required' });
     }
     if (!body.order_number) {
-        result.messages.push({ field: 'order_number', message: 'Order number is required' });
+        result.messages.push({ field: 'order_number', message: 'order_number field is required' });
     }
     if (!body.to) {
-        result.messages.push({ field: 'to', message: 'To is required' });
+        result.messages.push({ field: 'to', message: 'to field is required' });
     }
     if (result.messages.length > 0) {
         return Promise.reject(result);

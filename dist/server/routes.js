@@ -24,16 +24,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const created_order_1 = require("@/email/created_order");
-const rejected_order_1 = require("@/email/rejected_order");
+const createdOrder_1 = require("@/email/createdOrder");
+const rejectedOrder_1 = require("@/email/rejectedOrder");
 const router = express.Router();
 /* Middlewares */
 /* Functions */
 const createdOrder = (req, res) => {
-    (0, created_order_1.sendCreatedOrderEmail)(req, res);
+    (0, createdOrder_1.sendCreatedOrderEmail)(req, res);
 };
 const rejectedOrder = (req, res) => {
-    (0, rejected_order_1.sendRejectedOrderEmail)(req, res);
+    (0, rejectedOrder_1.sendRejectedOrderEmail)(req, res);
 };
 /* Routes */
 router.post('/email/created_order', createdOrder);
