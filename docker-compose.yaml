@@ -3,18 +3,19 @@ networks:
     driver: bridge
 
 services:
+  rabbitmq:
+      container_name: notification-ms-rabbitmq
+      image: "rabbitmq:3.8.3-management"
+      ports:
+        - "15672:15672"
+        - "5672:5672"
   redis:
+    container_name: notification-ms-redis
     image: 'redis:alpine'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_PORT_NUMBER=${REDIS_PORT}
     ports:
       - '6379:6379'
-    networks:
-      - notifications-network
-  mongo:
-    image: 'mongo:latest'
-    ports:
-      - '27017:27017'
     networks:
       - notifications-network
