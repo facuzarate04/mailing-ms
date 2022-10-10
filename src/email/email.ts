@@ -10,15 +10,6 @@ interface IEmail {
     connection: IConnectionSMTP;
 }
 
-export interface IEmailRedis {
-    key: string;
-    value: {
-        type: string,
-        to: string;
-        subject: string;
-    };
-}
-
 
 function init(connection: IConnectionSMTP) : nodemailer.Transporter {
 
@@ -58,7 +49,7 @@ export async function send(data: IEmail) : Promise<string | null> {
 }
 
 
-export function saveEmail(data: IEmailRedis) : Promise<void> {
+export function saveEmail(data: schema.IEmailRedis) : Promise<void> {
     const key = data.key;
     const value = {
         type: data.value.type,

@@ -1,5 +1,14 @@
 import { redis } from '@/server/redis';
-import { IEmailRedis } from './email';
+
+
+export interface IEmailRedis {
+    key: string;
+    value: {
+        type: string,
+        to: string;
+        subject: string;
+    };
+}
 
 const saveEmail = async (email: IEmailRedis): Promise<string | null> => {
     const key = email.key;

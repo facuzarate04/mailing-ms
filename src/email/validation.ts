@@ -1,5 +1,5 @@
-import { ICreatedOrderRequest } from "./created_order";
-import { IRejectedOrderRequest } from "./rejected_order";
+import { ICreatedOrderRequest } from "./createdOrder";
+import { IRejectedOrderRequest } from "./rejectedOrder";
 
 
 interface ValidationError {

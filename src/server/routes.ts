@@ -1,7 +1,7 @@
 import * as express from "express";
 import { NextFunction } from "connect";
-import { sendCreatedOrderEmail } from "@/email/created_order";
-import { sendRejectedOrderEmail } from "@/email/rejected_order";
+import { sendCreatedOrderEmail } from "@/email/createdOrder";
+import { sendRejectedOrderEmail } from "@/email/rejectedOrder";
 
 const router = express.Router();
 
