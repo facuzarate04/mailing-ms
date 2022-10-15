@@ -1,34 +1,33 @@
-import { IConnectionSMTP} from "./connection";
+import { IConnectionSMTP } from "@/email/connection";
 import { Request, Response } from 'express'
-import { validateSendRejectedOrder } from "./validation";
+import { validateSendCreatedOrder } from "@/email/validation";
 import * as email from '@/email/email'
 
-
-
-export interface IRejectedOrderRequest {
+export interface ICreatedOrderRequest {
     name: string;
-    reason: string;
+    order_number: string;
     to: string;
 }
 
-export const sendRejectedOrderEmail = async (req: Request, res: Response) => {
+
+export const sendCreatedOrderEmail = async (req: Request, res: Response) => {
     try {
-        const body = await validateSendRejectedOrder(req.body);
+        const body = await validateSendCreatedOrder(req.body);
         
         const emailData = {
             to: body.to,
             subject: subject(),
-            html: html(body.name, body.reason),
+            html: html(body.name, body.order_number),
             connection: connection
         };
 
-        const response = await email.send(emailData)
+        const response = await email.send(emailData);
 
         if(typeof response === 'string') {
             await email.save({
                 key: response,
                 value: {
-                    type: 'rejected_order',
+                    type: 'created_order',
                     to: emailData.to,
                     subject: emailData.subject
                 }
@@ -36,20 +35,21 @@ export const sendRejectedOrderEmail = async (req: Request, res: Response) => {
         }
         
         return res.status(200).json({ message: 'Email sent' });
+
     } catch (error) {
-        return res.status(500).json({ message: 'Error sending email' });
+        return res.status(500).json({ message: error});
     }
 };
 
 
 const subject = () : string => {
-    return 'Order Rejected';
+    return 'Order Created';
 }
 
-const html = (name: string, reason: string) : string => {
+const html = (name: string, order_number: string) : string => {
     return `<h2>Hi <b>${name}</b></h2>
-    <p>This emai is to notify you that your order has been rejected.</p>
-    <p>Reason: ${reason}</p>
+    <p style="color: green;">This emai is to notify you that your order has been created successfully.</p>
+    <p><b>Order Number: ${order_number}</b></p>
     <p>Thank you for shopping with us.</p>
     <p>Regards</p>`;
 }
@@ -63,4 +63,7 @@ const connection: IConnectionSMTP = {
         pass: 'ff360e0a187be7'
     }
 }
+
+
+
 

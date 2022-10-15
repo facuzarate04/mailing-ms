@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer';
-import { IConnectionSMTP } from './connection';
+import { IConnectionSMTP } from '@/email/connection';
 import * as schema from '@/email/schema';
 
 

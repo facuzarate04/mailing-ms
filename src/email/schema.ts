@@ -1,4 +1,4 @@
-import { redis } from '@/server/redis';
+import { redis } from '@/redis/redis';
 
 
 export interface IEmailRedis {
@@ -13,9 +13,9 @@ export interface IEmailRedis {
 const saveEmail = async (email: IEmailRedis): Promise<string | null> => {
     const key = email.key;
     const value = email.value;
-   const response = await redis.setAsync(key, JSON.stringify(value));
+    const response = await redis.setAsync(key, JSON.stringify(value));
 
-   return Promise.resolve(response);
+    return Promise.resolve(response);
 }
 
 const getEmail = async (key: string) => {
