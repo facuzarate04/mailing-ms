@@ -1,7 +1,7 @@
 import * as express from "express";
 import { NextFunction } from "connect";
-import { sendCreatedOrderEmail } from "@/templates/createdOrder";
-import { sendRejectedOrderEmail } from "@/templates/rejectedOrder";
+import { sendEmail as send } from "@/email/emailController";
+import { storeSchema as store } from "@/template/templateController";
 
 const router = express.Router();
 
@@ -12,19 +12,19 @@ const router = express.Router();
 
 /* Functions */
 
-const createdOrder = (req: express.Request, res: express.Response) => {
-    sendCreatedOrderEmail(req, res);
+const sendEmail = (req: express.Request, res: express.Response) => {
+    send(req, res);
 };
 
-const rejectedOrder = (req: express.Request, res: express.Response) => {
-    sendRejectedOrderEmail(req, res);
+const storeSchema = (req: express.Request, res: express.Response) => {
+    store(req, res);
 };
 
 
 /* Routes */
 
-router.post('/email/created_order', createdOrder);
-router.post('/email/rejected_order', rejectedOrder);
+router.post('/email/send', sendEmail);
+router.post('/template/store', storeSchema);
 
 
 export default router;

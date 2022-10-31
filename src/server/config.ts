@@ -13,4 +13,5 @@ const config: IConfig = {
     db_redis_uri: process.env.DB_REDIS || 'redis://localhost:6379'
 };
 
+
 export default config;

@@ -1,5 +1,6 @@
-import { ICreatedOrderRequest } from "@/templates/createdOrder";
-import { IRejectedOrderRequest } from "@/templates/rejectedOrder";
+import { getTemplate } from "@/template/schema";
+import { ISendEmailRequest } from "./emailController";
+
 
 
 interface ValidationError {
@@ -12,20 +13,19 @@ interface ValidationErrorItem {
 }
 
 
-export function validateSendCreatedOrder(body: ICreatedOrderRequest): Promise<ICreatedOrderRequest> {
+export async function validateSendEmailRequest(body: ISendEmailRequest): Promise<ISendEmailRequest> {
     const result: ValidationError  = {
         messages: []
     };
 
-    if (!body.name) {
-        result.messages.push({ field: 'name', message: 'name field is required' });
-    }
-    if (!body.order_number) {
-        result.messages.push({ field: 'order_number', message: 'order_number field is required' });
+    if (!body.templateName) {
+        result.messages.push({ field: 'templateName', message: 'templateNamefield is required' });
     }
     if (!body.to) {
         result.messages.push({ field: 'to', message: 'to field is required' });
     }
+    await validateHtmlData(body.templateName, body.htmlData, result);
+
     if (result.messages.length > 0) {
         return Promise.reject(result);
     }
@@ -34,24 +34,26 @@ export function validateSendCreatedOrder(body: ICreatedOrderRequest): Promise<IC
 
 }
 
-export function validateSendRejectedOrder(body: IRejectedOrderRequest): Promise<IRejectedOrderRequest> {
-    const result: ValidationError  = {
-        messages: []
-    };
-
-    if (!body.name) {
-        result.messages.push({ field: 'name', message: 'Name is required' });
+async function validateHtmlData(name: string, htmlData: object, result: ValidationError): Promise<object | ValidationError> {
+    if(!htmlData) {
+        result.messages.push({ field: 'htmlData', message: 'htmlData field is required' });
+        return Promise.reject(result);
     }
-    if (!body.reason) {
-        result.messages.push({ field: 'reason', message: 'Reason number is required' });
+    const template = await getTemplate(name);
+    if(template) {
+        const regex = new RegExp(/{{\s*[\w.]+\s*}}/g);
+        const matches = template.html.match(regex);
+        if(matches) {
+            matches.forEach(match => {
+                if(!htmlData.hasOwnProperty(match.replace(/{{\s*|\s*}}/g, ''))) {
+                    result.messages.push({ field: 'html', message: `html field is missing ${match}` });
+                }
+            });
+        }
     }
-    if (!body.to) {
-        result.messages.push({ field: 'to', message: 'To is required' });
-    }
-    if (result.messages.length > 0) {
+    if(result.messages.length > 0) {
         return Promise.reject(result);
     }
 
-    return Promise.resolve(body);
-
+    return Promise.resolve(htmlData);
 }
