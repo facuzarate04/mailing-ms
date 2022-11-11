@@ -1,13 +1,24 @@
 import * as nodemailer from 'nodemailer';
-import * as schema from '@/email/schema';
-import { getTemplate, IConnectionSMTP } from '@/template/schema';
+import * as templateRedis from '@/template/redisSchema';
+import { getTemplate, IConnectionSMTP, ITemplate } from '@/template/schema';
 import { ISendEmailRequest } from './emailController';
 
 
 
 export async function send(data: ISendEmailRequest) : Promise<string | null> {
 
-    const template = await getTemplate(data.moduleName, data.templateName);
+    let template = null;
+    
+    const rTemplate =  await templateRedis.getTemplate(`${data.moduleName}_${data.templateName}`);
+    
+    if(rTemplate) {
+        template = rTemplate;
+    }else {
+        template = await getTemplate(data.moduleName, data.templateName);
+        if(template) {
+            await save(data.moduleName, data.templateName, template);
+        }
+    }
 
     if (template) {
         const transporter = init(template.connection)
@@ -20,17 +31,10 @@ export async function send(data: ISendEmailRequest) : Promise<string | null> {
     
         const info = await transporter.sendMail(mailOptions);
         if(info.messageId) {
-
-            await save({
-                key: info.messageId,
-                value: {
-                    type: data.templateName,
-                    to: data.to
-                }
-            });
-
+            //Notify to rabbit that
             return Promise.resolve(info.messageId);
         }
+        //Notify to rabbit that email was not sent
         return Promise.reject('Error sending email');
     }
     return Promise.reject('Template not found');
@@ -58,16 +62,12 @@ function init(connection: IConnectionSMTP) : nodemailer.Transporter {
 }
 
 
-async function save(data: schema.IEmailRedis) : Promise<void> {
+async function save(moduleName: string, templateName: string, template: ITemplate) : Promise<void> {
 
-    const key = data.key;
-    const value = {
-        type: data.value.type,
-        to: data.value.to
-    };
+    const key = `${moduleName}_${templateName}`;
 
     if (key) {
-       await schema.saveEmail({ key, value });
+       await templateRedis.saveTemplate({key, template});
        return Promise.resolve();
     }
     return Promise.reject('Error saving email on Redis');

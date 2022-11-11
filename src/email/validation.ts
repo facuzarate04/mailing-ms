@@ -18,6 +18,10 @@ export async function validateSendEmailRequest(body: ISendEmailRequest): Promise
         messages: []
     };
 
+    if (!body.moduleName) {
+        result.messages.push({ field: 'moduleName', message: 'moduleNamefield is required' });
+    }
+
     if (!body.templateName) {
         result.messages.push({ field: 'templateName', message: 'templateNamefield is required' });
     }
