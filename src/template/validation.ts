@@ -15,9 +15,9 @@ export async function validateStoreTemplateRequest(data: IStoreTemplateRequest) 
         messages: []
     };
     
-    await validateName(data.name, result);
+    await validateNames(data.moduleName, data.templateName, result);
     await validateSubject(data.subject, result);
-    await validateHtml(data.html, data.name, result);
+    await validateHtml(data.html, data.moduleName, data.templateName, result);
     await validateConnection(data.connection, result);
 
     if(result.messages.length) {
@@ -28,27 +28,49 @@ export async function validateStoreTemplateRequest(data: IStoreTemplateRequest) 
 
 }
 
-async function validateName(name: string, result: ValidationError): Promise<string | ValidationError> {
+async function validateNames(moduleName: string, templateName: string, result: ValidationError): Promise<string | ValidationError> {
     
-    if(!name) {
-        result.messages.push({ field: 'name', message: 'name field is required' });
+    if(!moduleName) {
+        result.messages.push({ field: 'moduleName', message: 'moduleName field is required' });
         return Promise.reject(result);
     }
-    const template = await getTemplate(name);
+
+    if(!templateName) {
+        result.messages.push({ field: 'templateName', message: 'templateName field is required' });
+        return Promise.reject(result);
+    }
+
+    const template = await getTemplate(moduleName, templateName);
+
     if(template) {
-        result.messages.push({ field: 'name', message: 'name field is already taken' });
+        result.messages.push(
+            { field: 'moduleName', message: 'moduleName already exists' },
+            { field: 'templateName', message: 'templateName already exists' }
+        );
         return Promise.reject(result);
     }
-    if(name.length < 3) {
-        result.messages.push({ field: 'name', message: 'name field must be at least 3 characters long' });
+
+    if(moduleName.length < 3) {
+        result.messages.push({ field: 'moduleName', message: 'moduleName field must be at least 3 characters long' });
         return Promise.reject(result);
     }
-    if(name.length > 15) {
-        result.messages.push({ field: 'name', message: 'name field must be at most 15 characters long' });
+
+    if(moduleName.length > 15) {
+        result.messages.push({ field: 'moduleName', message: 'moduleName field must be at most 15 characters long' });
+        return Promise.reject(result);
+    }
+
+    if(templateName.length < 3) {
+        result.messages.push({ field: 'templateName', message: 'templateName field must be at least 3 characters long' });
+        return Promise.reject(result);
+    }
+
+    if(templateName.length > 15) {
+        result.messages.push({ field: 'templateName', message: 'templateName field must be at most 15 characters long' });
         return Promise.reject(result);
     }
     
-    return Promise.resolve(name);
+    return Promise.resolve(templateName);
 }
 
 
@@ -57,10 +79,12 @@ async function validateSubject(subject: string, result: ValidationError): Promis
         result.messages.push({ field: 'subject', message: 'subject field is required' });
         return Promise.reject(result);
     }
+
     if(subject.length < 3) {
         result.messages.push({ field: 'subject', message: 'subject field must be at least 3 characters long' });
         return Promise.reject(result);
     }
+
     if(subject.length > 50) {
         result.messages.push({ field: 'subject', message: 'subject field must be at most 50 characters long' });
         return Promise.reject(result);
@@ -71,13 +95,13 @@ async function validateSubject(subject: string, result: ValidationError): Promis
 }
 
 
-async function validateHtml(html: string, name: string, result: ValidationError): Promise<string> {
+async function validateHtml(html: string, moduleName:string, templateName: string, result: ValidationError): Promise<string> {
     
     if(!html) {
         result.messages.push({ field: 'html', message: 'html field is required' });
         return Promise.reject(result);
     }
-    const template = await getTemplate(name);
+    const template = await getTemplate(moduleName, templateName);
 
     return Promise.resolve(html);
 

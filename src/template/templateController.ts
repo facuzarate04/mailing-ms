@@ -3,7 +3,8 @@ import { Request, Response } from 'express';
 import { validateStoreTemplateRequest } from "@/template/validation";
 
 export interface IStoreTemplateRequest {
-    name: string;
+    moduleName: string;
+    templateName: string;
     subject: string;
     html: string;
     connection: {
@@ -14,7 +15,9 @@ export interface IStoreTemplateRequest {
             user: string;
             pass: string;
         }
-    }
+    },
+    deletedAt?: Date;
+    timestamp: Date;
 }
 
 export async function storeSchema(req: Request, res: Response) {

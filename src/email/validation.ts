@@ -21,10 +21,12 @@ export async function validateSendEmailRequest(body: ISendEmailRequest): Promise
     if (!body.templateName) {
         result.messages.push({ field: 'templateName', message: 'templateNamefield is required' });
     }
+
     if (!body.to) {
         result.messages.push({ field: 'to', message: 'to field is required' });
     }
-    await validateHtmlData(body.templateName, body.htmlData, result);
+
+    await validateHtmlData(body.moduleName, body.templateName, body.htmlData, result);
 
     if (result.messages.length > 0) {
         return Promise.reject(result);
@@ -34,12 +36,14 @@ export async function validateSendEmailRequest(body: ISendEmailRequest): Promise
 
 }
 
-async function validateHtmlData(name: string, htmlData: object, result: ValidationError): Promise<object | ValidationError> {
+async function validateHtmlData(moduleName:string, templateName: string, htmlData: object, result: ValidationError): Promise<object | ValidationError> {
     if(!htmlData) {
         result.messages.push({ field: 'htmlData', message: 'htmlData field is required' });
         return Promise.reject(result);
     }
-    const template = await getTemplate(name);
+
+    const template = await getTemplate(moduleName, templateName);
+
     if(template) {
         const regex = new RegExp(/{{\s*[\w.]+\s*}}/g);
         const matches = template.html.match(regex);
@@ -51,6 +55,7 @@ async function validateHtmlData(name: string, htmlData: object, result: Validati
             });
         }
     }
+    
     if(result.messages.length > 0) {
         return Promise.reject(result);
     }

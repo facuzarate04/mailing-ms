@@ -3,6 +3,7 @@ import { validateSendEmailRequest } from "@/email/validation";
 import * as email from '@/email/email'
 
 export interface ISendEmailRequest {
+    moduleName: string;
     templateName: string;
     to: string;
     htmlData: object;

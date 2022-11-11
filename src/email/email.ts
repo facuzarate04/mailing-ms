@@ -7,7 +7,7 @@ import { ISendEmailRequest } from './emailController';
 
 export async function send(data: ISendEmailRequest) : Promise<string | null> {
 
-    const template = await getTemplate(data.templateName);
+    const template = await getTemplate(data.moduleName, data.templateName);
 
     if (template) {
         const transporter = init(template.connection)

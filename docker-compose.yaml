@@ -4,11 +4,13 @@ networks:
 
 services:
   rabbitmq:
-      container_name: notification-ms-rabbitmq
-      image: "rabbitmq:3.8.3-management"
-      ports:
-        - "15672:15672"
-        - "5672:5672"
+    container_name: notification-ms-rabbitmq
+    image: "rabbitmq:3.8.3-management"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - notifications-network
   redis:
     container_name: notification-ms-redis
     image: 'redis:alpine'
