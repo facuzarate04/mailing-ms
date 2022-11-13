@@ -1,4 +1,4 @@
-import { store, update, softDelete, getMany } from "@/template/schema";
+import { store, update, destroy, getMany } from "@/template/schema";
 import { Request, Response } from 'express';
 import { validateStoreTemplateRequest, validateUpdateTemplateRequest } from "@/template/validation";
 
@@ -27,7 +27,7 @@ export async function updateTemplate(req: Request, res: Response): Promise<Respo
 export async function deleteTemplate(req: Request, res: Response): Promise < Response > {
     try {
         const { moduleName, templateName } = req.params;
-        const template = await softDelete(moduleName, templateName);
+        const template = await destroy(moduleName, templateName);
         return res.status(200).json({ template });
     } catch (error) {
         return res.status(500).json({ message: error });

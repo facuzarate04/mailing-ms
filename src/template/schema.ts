@@ -1,5 +1,6 @@
 import {Schema, model}  from 'mongoose';
-
+import * as redisSchema from '@/template/redisSchema';
+ 
 
 export interface ITemplate {
     moduleName: string;
@@ -55,31 +56,35 @@ export async function store(data: any): Promise<ITemplate> {
 }
 
 export async function update(moduleName: string, templateName: string, data: any): Promise<ITemplate | null> {
-    const template = await Template.findOneAndUpdate(
+    await Template.findOneAndUpdate(
         { moduleName: moduleName, templateName: templateName, deletedAt: null },
         data,
         { new: false }
     );
+    await redisSchema.deleteTemplate(`${moduleName}_${templateName}`);
+    const template = await getOne(moduleName, templateName);
     return Promise.resolve(template);
 }
 
-export async function softDelete(moduleName: string, templateName: string): Promise<ITemplate | null> {
+export async function destroy(moduleName: string, templateName: string): Promise<ITemplate | null> {
     const template = await Template.findOneAndUpdate(
         { moduleName: moduleName, templateName: templateName, deletedAt: null },
         { deletedAt: Date.now() },
         { new: false }
     );
+    await redisSchema.deleteTemplate(`${moduleName}_${templateName}`);
     return Promise.resolve(template);
 }
 
 export async function getOne(moduleTemplate: string, templateName: string): Promise<ITemplate | null> {
-    const template = await Template.findOne(
-        { moduleName: moduleTemplate, templateName: templateName, deletedAt: null }
-    );
-    if(template) {
-        return Promise.resolve(template);
+    let template = null;
+    template = await redisSchema.getTemplate(`${moduleTemplate}_${templateName}`);
+    if(!template) {
+        template = await Template.findOne(
+            { moduleName: moduleTemplate, templateName: templateName, deletedAt: null }
+         );
     }
-    return null;
+    return Promise.resolve(template);
 }
 
 export async function getMany(moduleName: string): Promise<ITemplate[]> {

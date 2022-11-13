@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer';
-import * as templateRedis from '@/template/redisSchema';
+import { saveTemplate } from '@/template/redisSchema';
 import { getOne, IConnectionSMTP, ITemplate } from '@/template/schema';
 import { ISendEmailRequest } from './emailController';
 
@@ -7,17 +7,10 @@ import { ISendEmailRequest } from './emailController';
 
 export async function send(data: ISendEmailRequest) : Promise<string | null> {
 
-    let template = null;
-    
-    const rTemplate =  await templateRedis.getTemplate(`${data.moduleName}_${data.templateName}`);
-    
-    if(rTemplate) {
-        template = rTemplate;
-    }else {
-        template = await getOne(data.moduleName, data.templateName);
-        if(template) {
-            await save(data.moduleName, data.templateName, template);
-        }
+    const template = await getOne(data.moduleName, data.templateName);
+
+    if(template) {
+        await save(data.moduleName, data.templateName, template);
     }
 
     if (template) {
@@ -67,7 +60,7 @@ async function save(moduleName: string, templateName: string, template: ITemplat
     const key = `${moduleName}_${templateName}`;
 
     if (key) {
-       await templateRedis.saveTemplate({key, template});
+       await saveTemplate({key, template});
        return Promise.resolve();
     }
     return Promise.reject('Error saving email on Redis');

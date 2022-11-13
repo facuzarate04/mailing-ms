@@ -4,7 +4,7 @@ import { sendEmail as send } from "@/email/emailController";
 import { 
     storeTemplate as store,
     updateTemplate as update,
-    deleteTemplate as softDelete,
+    deleteTemplate as destroy,
     getTemplates as get 
 } from "@/template/templateController";
 
@@ -30,7 +30,7 @@ function updateTemplate(req: express.Request, res: express.Response) {
 };
 
 function deleteTemplate(req: express.Request, res: express.Response) {
-    softDelete(req, res);
+    destroy(req, res);
 };
 
 function getTemplates(req: express.Request, res: express.Response) {
