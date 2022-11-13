@@ -1,4 +1,4 @@
-import { getTemplate } from "@/template/schema";
+import { getOne } from "@/template/schema";
 import { ISendEmailRequest } from "./emailController";
 
 
@@ -46,7 +46,7 @@ async function validateHtmlData(moduleName:string, templateName: string, htmlDat
         return Promise.reject(result);
     }
 
-    const template = await getTemplate(moduleName, templateName);
+    const template = await getOne(moduleName, templateName);
 
     if(template) {
         const regex = new RegExp(/{{\s*[\w.]+\s*}}/g);

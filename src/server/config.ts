@@ -3,14 +3,16 @@ dotenv.config();
 
 interface IConfig {
     port: string | number;
-    db_mongo_uri: string;
-    db_redis_uri: string;
+    mongoUrl: string;
+    redisUrl: string;
+    rabbitUrl: string;
 }
 
 const config: IConfig = {
     port: process.env.PORT || 3000,
-    db_mongo_uri: process.env.DB_ENDPOINT || 'mongodb://localhost:27017',
-    db_redis_uri: process.env.DB_REDIS || 'redis://localhost:6379'
+    mongoUrl: process.env.DB_ENDPOINT || 'mongodb://localhost:27017',
+    redisUrl: process.env.DB_REDIS || 'redis://localhost:6379',
+    rabbitUrl: process.env.RABBIT_URL || 'amqp://localhost:5672'
 };
 
 

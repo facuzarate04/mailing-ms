@@ -20,19 +20,19 @@ app.use(bodyParser.json());
 app.use('/api/v1', router);
 
 /* Mongo DB connection */
-mongoose.connect(config.db_mongo_uri, {}, (err) => {
+mongoose.connect(config.mongoUrl, {}, (err) => {
     if (err) {
         console.log('Error connecting to MongoDB', err);
     } else {
-        console.log(`Connected to mongo at ${config.db_mongo_uri}`);
+        console.log(`Connected to mongo at ${config.mongoUrl}`);
     }
 });
 
 /* Redis Client connection */
-export const redisClient = createClient({ url: config.db_redis_uri });
+export const redisClient = createClient({ url: config.redisUrl });
 redisClient.connect();
 redisClient.on('ready', () => {
-    console.log(`Connected to redis: ${config.db_redis_uri}`);
+    console.log(`Connected to redis: ${config.redisUrl}`);
 });
 
 

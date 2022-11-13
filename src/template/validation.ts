@@ -1,5 +1,5 @@
-import { IStoreTemplateRequest } from "@/template/templateController";
-import { getTemplate, IConnectionSMTP } from "@/template/schema";
+import { ITemplate, IUpdateTemplate } from "@/template/schema";
+import { getOne, IConnectionSMTP } from "@/template/schema";
 
 interface ValidationError {
     code?: string;
@@ -10,7 +10,7 @@ interface ValidationErrorItem {
     message: string;
 }
 
-export async function validateStoreTemplateRequest(data: IStoreTemplateRequest) : Promise<IStoreTemplateRequest | ValidationError> {
+export async function validateStoreTemplateRequest(data: ITemplate) : Promise<ITemplate | ValidationError> {
     const result: ValidationError  = {
         messages: []
     };
@@ -28,6 +28,31 @@ export async function validateStoreTemplateRequest(data: IStoreTemplateRequest) 
 
 }
 
+export async function validateUpdateTemplateRequest(moduleName: string, templateName: string, data: IUpdateTemplate): Promise<IUpdateTemplate | ValidationError> {
+    const result: ValidationError  = {
+        messages: []
+    };
+    
+    let template = await getOne(moduleName, templateName);
+
+    if(!template) {
+        result.messages.push({ field: 'template', message: 'template not found' });
+        return Promise.reject(result);
+    }
+
+    await validateSubject(data.subject, result);
+    await validateHtml(data.html, moduleName, templateName, result);
+    await validateConnection(data.connection, result);
+
+    if(result.messages.length) {
+        return Promise.reject(result);
+    }
+
+    return Promise.resolve(data);
+}
+
+/* Validation items functions */
+
 async function validateNames(moduleName: string, templateName: string, result: ValidationError): Promise<string | ValidationError> {
     
     if(!moduleName) {
@@ -40,7 +65,7 @@ async function validateNames(moduleName: string, templateName: string, result: V
         return Promise.reject(result);
     }
 
-    const template = await getTemplate(moduleName, templateName);
+    const template = await getOne(moduleName, templateName);
 
     if(template) {
         result.messages.push(
@@ -101,7 +126,7 @@ async function validateHtml(html: string, moduleName:string, templateName: strin
         result.messages.push({ field: 'html', message: 'html field is required' });
         return Promise.reject(result);
     }
-    const template = await getTemplate(moduleName, templateName);
+    const template = await getOne(moduleName, templateName);
 
     return Promise.resolve(html);
 

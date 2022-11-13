@@ -1,6 +1,6 @@
 import * as nodemailer from 'nodemailer';
 import * as templateRedis from '@/template/redisSchema';
-import { getTemplate, IConnectionSMTP, ITemplate } from '@/template/schema';
+import { getOne, IConnectionSMTP, ITemplate } from '@/template/schema';
 import { ISendEmailRequest } from './emailController';
 
 
@@ -14,7 +14,7 @@ export async function send(data: ISendEmailRequest) : Promise<string | null> {
     if(rTemplate) {
         template = rTemplate;
     }else {
-        template = await getTemplate(data.moduleName, data.templateName);
+        template = await getOne(data.moduleName, data.templateName);
         if(template) {
             await save(data.moduleName, data.templateName, template);
         }
