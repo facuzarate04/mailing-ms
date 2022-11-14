@@ -1,6 +1,6 @@
 import { store, update, destroy, getMany } from "@/template/schema";
 import { Request, Response } from 'express';
-import { validateStoreTemplateRequest, validateUpdateTemplateRequest } from "@/template/validation";
+import { validateStoreTemplateRequest, validateUpdateTemplateRequest, validateGetModuleTemplatesRequest } from "@/template/validation";
 
 
 export async function storeTemplate(req: Request, res: Response): Promise<Response> {
@@ -24,7 +24,7 @@ export async function updateTemplate(req: Request, res: Response): Promise<Respo
     }
 }
 
-export async function deleteTemplate(req: Request, res: Response): Promise < Response > {
+export async function deleteTemplate(req: Request, res: Response): Promise <Response> {
     try {
         const { moduleName, templateName } = req.params;
         const template = await destroy(moduleName, templateName);
@@ -36,9 +36,12 @@ export async function deleteTemplate(req: Request, res: Response): Promise < Res
 
 export async function getTemplates(req: Request, res: Response): Promise<Response> {
     try {
-        const { moduleName } = req.params;
-        const templates = await getMany(moduleName);
-        return res.status(200).json({ templates });
+        const moduleName = await validateGetModuleTemplatesRequest(req);
+        if(typeof moduleName === 'string') {
+            const templates = await getMany(moduleName);
+            return res.status(200).json({ templates });
+        }
+        return res.status(500).json({ message: moduleName });
     } catch (error) {
         return res.status(500).json({ message: error });
     }

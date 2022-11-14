@@ -91,8 +91,5 @@ export async function getMany(moduleName: string): Promise<ITemplate[]> {
     const templates = await Template.find(
         { moduleName: moduleName, deletedAt: null }
     );
-    if(templates) {
-        return Promise.resolve(templates);
-    }
-    return [];
+    return Promise.resolve(templates);
 }

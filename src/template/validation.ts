@@ -1,5 +1,6 @@
 import { ITemplate, IUpdateTemplate } from "@/template/schema";
 import { getOne, IConnectionSMTP } from "@/template/schema";
+import { Request } from "express";
 
 interface ValidationError {
     code?: string;
@@ -49,6 +50,22 @@ export async function validateUpdateTemplateRequest(moduleName: string, template
     }
 
     return Promise.resolve(data);
+}
+
+
+export async function validateGetModuleTemplatesRequest(req: Request): Promise<string | ValidationError> {
+    const result: ValidationError  = {
+        messages: []
+    };
+    if(!req.query.moduleName) {
+        result.messages.push({ field: 'moduleName', message: 'moduleName is required' });
+        return Promise.reject(result);
+    }
+    if(typeof req.query.moduleName !== 'string') {
+        result.messages.push({ field: 'moduleName', message: 'moduleName must be a string' });
+        return Promise.reject(result);
+    }
+    return Promise.resolve(req.query.moduleName);
 }
 
 /* Validation items functions */

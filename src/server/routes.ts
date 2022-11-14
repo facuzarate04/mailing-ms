@@ -42,9 +42,9 @@ function getTemplates(req: express.Request, res: express.Response) {
 
 router.post('/email/send', sendEmail);
 router.post('/template', storeTemplate);
-router.put('/:moduleName/:templateName/template', updateTemplate);
-router.delete('/:moduleName/:templateName/template', deleteTemplate);
-router.get('/:moduleName/template', getTemplates);
+router.put('/template/:moduleName/:templateName', updateTemplate);
+router.delete('/template/:moduleName/:templateName', deleteTemplate);
+router.get('/template', getTemplates);
 
 
 export default router;
