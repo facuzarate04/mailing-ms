@@ -1,6 +1,4 @@
 import * as express from "express";
-import { NextFunction } from "connect";
-import { sendEmail as send } from "@/email/emailController";
 import { 
     storeTemplate as store,
     updateTemplate as update,
@@ -17,9 +15,6 @@ const router = express.Router();
 
 /* Functions */
 
-function sendEmail(req: express.Request, res: express.Response) {
-    send(req, res);
-};
 
 function storeTemplate(req: express.Request, res: express.Response) {
     store(req, res);
@@ -40,7 +35,6 @@ function getTemplates(req: express.Request, res: express.Response) {
 
 /* Routes */
 
-router.post('/email/send', sendEmail);
 router.post('/template', storeTemplate);
 router.put('/template/:moduleName/:templateName', updateTemplate);
 router.delete('/template/:moduleName/:templateName', deleteTemplate);

@@ -1,11 +1,11 @@
 import * as nodemailer from 'nodemailer';
 import { saveTemplate } from '@/template/redisSchema';
 import { getOne, IConnectionSMTP, ITemplate } from '@/template/schema';
-import { ISendEmailRequest } from './emailController';
+import { ISendEmailReceived } from './emailController';
 
 
 
-export async function send(data: ISendEmailRequest) : Promise<string | null> {
+export async function send(data: ISendEmailReceived) : Promise<string | null> {
 
     const template = await getOne(data.moduleName, data.templateName);
 

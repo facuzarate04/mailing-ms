@@ -1,5 +1,5 @@
 import { getOne } from "@/template/schema";
-import { ISendEmailRequest } from "./emailController";
+import { ISendEmailReceived } from "./emailController";
 
 
 
@@ -13,7 +13,7 @@ interface ValidationErrorItem {
 }
 
 
-export async function validateSendEmailRequest(body: ISendEmailRequest): Promise<ISendEmailRequest> {
+export async function validateSendEmailRequest(body: ISendEmailReceived): Promise<ISendEmailReceived> {
     const result: ValidationError  = {
         messages: []
     };

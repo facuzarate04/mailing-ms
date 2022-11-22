@@ -7,6 +7,7 @@ import router from '@/server/routes';
 import helmet from 'helmet';
 import cors from 'cors';
 import { createClient } from 'redis';
+import * as rabbitReceiver from '@/rabbit/receiver';
 
 
 const app = express();
@@ -34,6 +35,9 @@ redisClient.connect();
 redisClient.on('ready', () => {
     console.log(`Connected to redis: ${config.redisUrl}`);
 });
+
+/* Rabbit Init */
+rabbitReceiver.init();
 
 
 /* Start server */
