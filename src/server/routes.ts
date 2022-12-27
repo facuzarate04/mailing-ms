@@ -5,12 +5,29 @@ import {
     deleteTemplate as destroy,
     getTemplates as get 
 } from "@/template/templateController";
+import * as authorization from "@/server/auth";
 
 const router = express.Router();
 
+
 /* Middlewares */
 
-
+function authMiddleware(req: authorization.IUserSessionRequest, res: express.Response, next: express.NextFunction) {
+    const auth = req.header("Authorization");
+    if (!auth) {
+        return res.status(401).send("No token provided");
+    }
+    authorization.validateToken(auth).then((session) => {
+        if (!session) {
+            return res.status(401).send("Invalid token");
+        }
+        req.user = session;
+        next();
+    }).catch((err) => {
+        return res.status(401).send("Invalid token");
+    });
+    
+}
 
 
 /* Functions */
@@ -39,7 +56,6 @@ router.post('/template', storeTemplate);
 router.put('/template/:moduleName/:templateName', updateTemplate);
 router.delete('/template/:moduleName/:templateName', deleteTemplate);
 router.get('/template', getTemplates);
-
 
 export default router;
 

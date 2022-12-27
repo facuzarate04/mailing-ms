@@ -17,6 +17,7 @@ export async function sendEmail(data: ISendEmailReceived) {
         await email.send(body);
 
         let message =  {
+            message: 'Envío de email exitoso',
             moduleName: body.moduleName,
             templateName: body.templateName,
             sent: true,
@@ -27,6 +28,7 @@ export async function sendEmail(data: ISendEmailReceived) {
 
     } catch (error) {
         let message = {
+            message: 'Envío de email fallido',
             moduleName: data.moduleName,
             templateName: data.templateName,
             sent: false,

@@ -4,9 +4,11 @@
   "description": "Notifications microservice used in ecommerce project",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc",
-    "dev": "tsc && nodemon ./dist/server.js"
+    "start": "npm run build && npm run watch",
+    "build": "npm run build-ts",
+    "watch": "node ./dist/server.js",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w"
   },
   "keywords": [],
   "author": "Facundo Zarate",
