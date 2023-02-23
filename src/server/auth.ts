@@ -18,7 +18,7 @@ export interface IUserSessionRequest extends Request {
     user: ISession;
 }
 
-export async function validateToken(auth: string): Promise<ISession | any>  {
+export async function validateToken(auth: string): Promise<ISession>  {
 
     /* Search session on cache */
     const cachedSession = await sessionCache.getAsync(auth);
@@ -45,7 +45,4 @@ export async function validateToken(auth: string): Promise<ISession | any>  {
     }else {
       return Promise.reject();
     }
-
-    
-
 }

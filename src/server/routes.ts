@@ -12,20 +12,21 @@ const router = express.Router();
 
 /* Middlewares */
 
-function authMiddleware(req: authorization.IUserSessionRequest, res: express.Response, next: express.NextFunction) {
+function authMiddleware(req: any, res: express.Response, next: express.NextFunction) {
     const auth = req.header("Authorization");
     if (!auth) {
         return res.status(401).send("No token provided");
     }
-    authorization.validateToken(auth).then((session) => {
-        if (!session) {
+    authorization.validateToken(auth)
+        .then((session) => {
+            if (!session) {
+                return res.status(401).send("Invalid token");
+            }
+            req.user = session;
+            next();
+        }).catch((err) => {
             return res.status(401).send("Invalid token");
-        }
-        req.user = session;
-        next();
-    }).catch((err) => {
-        return res.status(401).send("Invalid token");
-    });
+        });
     
 }
 
@@ -52,10 +53,10 @@ function getTemplates(req: express.Request, res: express.Response) {
 
 /* Routes */
 
-router.post('/template', storeTemplate);
-router.put('/template/:moduleName/:templateName', updateTemplate);
-router.delete('/template/:moduleName/:templateName', deleteTemplate);
-router.get('/template', getTemplates);
+router.post('/template', authMiddleware, storeTemplate);
+router.put('/template/:moduleName/:templateName', authMiddleware, updateTemplate);
+router.delete('/template/:moduleName/:templateName', authMiddleware, deleteTemplate);
+router.get('/template', authMiddleware, getTemplates);
 
 export default router;
 
