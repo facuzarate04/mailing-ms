@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { redis as sessionCache } from "@/redis/redis";
 import config from "@/server/config";
+import axios from "axios";
 
 interface IUser {
     id: string;
@@ -30,13 +31,14 @@ export async function validateToken(auth: string): Promise<ISession>  {
     }
 
     /* Search session on external microservice */
-    const response = await fetch(config.authCurrentUserUrl, {
-      method: 'GET',
-      headers: { "Authorization": auth }
+    const response = await axios.get(`${config.authCurrentUserUrl}`, {
+      headers: {
+        Accept: "application/json",
+      }
     });
 
     if (response.status === 200) {
-      const user = await response.json();
+      const user = await response.data;
       await sessionCache.setAsync(auth, JSON.stringify(user));
       return Promise.resolve({
         token: auth,
