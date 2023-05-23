@@ -1,7 +1,7 @@
 {
-  "name": "notification-ms",
+  "name": "mailing-ms",
   "version": "1.0.0",
-  "description": "Notifications microservice used in ecommerce project",
+  "description": "Mailing microservice used in ecommerce project",
   "main": "server.js",
   "scripts": {
     "start": "npm run build && npm run watch",
